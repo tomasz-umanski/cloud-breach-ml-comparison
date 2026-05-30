@@ -1,0 +1,77 @@
+\section{Wnioski końcowe}
+\label{sec:wnioski}
+
+\subsection{Podsumowanie}
+
+W pracy zrealizowano empiryczne porównanie metod uczenia głębokiego i lasów
+losowych w zadaniu prognozowania naruszeń danych w chmurze, sformułowanym jako
+binarna klasyfikacja przepływów sieciowych. Zbudowano kompletny, odtwarzalny
+potok obejmujący przygotowanie danych, trening pięciu modeli (regresja
+logistyczna, las losowy oraz sieci MLP, CNN 1D i LSTM) oraz ich ocenę pod kątem
+skuteczności i kosztu obliczeniowego.
+
+Najważniejsze wnioski są następujące:
+\begin{enumerate}
+  \item \textbf{Obie rodziny metod skutecznie wykrywają naruszenia.} Zarówno las
+        losowy, jak i sieci głębokie osiągają wysokie wyniki, wyraźnie
+        przewyższając prosty model liniowy. To pokazuje, że złośliwa aktywność
+        kryje się w złożonych zależnościach między cechami, które obie metody
+        dobrze wychwytują.
+  \item \textbf{Skuteczność jest niemal taka sama, ale koszt --- już nie.}
+        Najlepszy model głęboki (\resBestDeepModel, $F_1 = \resBestDeepFOne$) i
+        las losowy ($F_1 = \resRFFOne$) osiągają praktycznie identyczną jakość,
+        przy czym las losowy dodatkowo wykrywa najwięcej ataków (najwyższa
+        czułość), uczy się kilkadziesiąt razy szybciej i potrafi wskazać, które
+        cechy zaważyły na decyzji. To czyni go wyjątkowo atrakcyjnym wyborem.
+  \item \textbf{Bardziej skomplikowane nie znaczy lepsze.} Rozbudowane sieci
+        sekwencyjne (zwłaszcza LSTM) nie przewyższyły ani lasu losowego, ani
+        prostszej sieci, generując jedynie wyższy koszt. Potwierdza to znaną z
+        literatury obserwację, że dla danych w postaci tabeli metody oparte na
+        drzewach pozostają bardzo trudne do pobicia.
+  \item \textbf{Wybór metody zależy od kontekstu.} Jeśli liczą się szybkie
+        dotrenowywanie, niski koszt, dobra wykrywalność i zrozumiałość decyzji
+        --- las losowy jest naturalnym wyborem. Sieci głębokie warto rozważyć
+        tam, gdzie zależy nam na maksymalnym ograniczeniu fałszywych alarmów
+        (wysoka precyzja CNN) i dysponujemy większymi zasobami obliczeniowymi.
+\end{enumerate}
+
+\subsection{Ograniczenia}
+
+Wyniki należy interpretować w świetle ograniczeń pracy:
+\begin{itemize}
+  \item Eksperyment przeprowadzono na losowym podzbiorze danych
+        \texttt{\resDataSource} (ze względu na rozmiar pełnego zbioru liczącego
+        kilka gigabajtów). Większa próbka mogłaby nieco zmienić konkretne
+        liczby, choć raczej nie ogólne wnioski; program jest gotowy do
+        uruchomienia na pełnym zbiorze bez zmian w kodzie.
+  \item Nie przeprowadzono wyczerpującego strojenia hiperparametrów --- użyto
+        rozsądnych wartości domyślnych, jednakowych dla wszystkich modeli.
+  \item Obliczenia prowadzono na CPU; na akceleratorach GPU względne czasy
+        treningu modeli głębokich uległyby skróceniu, choć relacja kosztów
+        pozostałaby jakościowo podobna.
+  \item Zadanie ograniczono do klasyfikacji binarnej; analiza wieloklasowa
+        (rozróżnianie typów ataków) stanowi naturalne rozszerzenie.
+\end{itemize}
+
+\subsection{Kierunki dalszych prac}
+
+Możliwe rozszerzenia obejmują: (1) walidację na pełnym zbiorze CSE-CIC-IDS2018 i
+innych zbiorach (UNSW-NB15, NSL-KDD); (2) systematyczne strojenie
+hiperparametrów oraz włączenie metod gradient boosting (XGBoost, LightGBM);
+(3) klasyfikację wieloklasową i wykrywanie nieznanych ataków metodami
+półnadzorowanymi; (4) analizę odporności modeli na ataki adwersarialne oraz
+dryf danych; (5) integrację najlepszego modelu w architekturze strumieniowej
+(np.\ przetwarzanie przepływów w czasie rzeczywistym) wraz z mechanizmami
+wyjaśnialności (SHAP) dla wsparcia analityków SOC.
+
+\subsection{Podsumowanie końcowe}
+
+Przeprowadzone badanie pokazuje, że w prognozowaniu naruszeń danych w chmurze
+nie ma jednej, bezdyskusyjnie najlepszej metody --- wybór jest kompromisem
+między skutecznością a kosztem, szybkością i zrozumiałością decyzji. Dla danych
+opisujących ruch sieciowy las losowy okazuje się wyjątkowo silnym i tanim
+rozwiązaniem, któremu sieci głębokie co najwyżej dorównują, lecz go nie
+prześcigają --- i to dopiero za cenę znacznie większego nakładu obliczeniowego.
+Dla studenta czy inżyniera bezpieczeństwa płynie z tego praktyczny wniosek:
+zanim sięgnie się po skomplikowane sieci neuronowe, warto najpierw wypróbować
+dobrze dobraną metodę klasyczną.

@@ -1,0 +1,10 @@
+# Core scientific stack
+numpy>=2.0
+pandas>=2.2
+scikit-learn>=1.5
+matplotlib>=3.8
+scipy>=1.13
+
+# Deep learning (PyTorch). TensorFlow has no Python 3.14 wheel at the time of
+# writing, so the deep models are implemented in PyTorch.
+torch>=2.4

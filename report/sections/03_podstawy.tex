@@ -1,0 +1,95 @@
+\section{Podstawy teoretyczne zastosowanych metod}
+\label{sec:podstawy}
+
+W tym rozdziale opisano --- w sposób możliwie przystępny, bez zagłębiania się w
+formalizm matematyczny --- dwie rodziny metod, które porównujemy: las losowy
+oraz sieci głębokie. Celem jest zrozumienie, \emph{jak} działają i \emph{czym}
+się różnią, bo to te różnice decydują o ich przydatności w ochronie danych w
+chmurze.
+
+\subsection{Las losowy}
+
+Punktem wyjścia jest \emph{drzewo decyzyjne}. Można je sobie wyobrazić jako
+listę pytań typu ,,czy liczba pakietów w połączeniu przekracza pewien próg?''.
+Odpowiadając na kolejne pytania, schodzimy w dół drzewa aż do liścia, który
+mówi: ,,to ruch normalny'' albo ,,to atak''. Pojedyncze drzewo jest jednak
+kapryśne --- drobna zmiana danych potrafi je całkowicie przebudować, przez co
+łatwo się ,,przeucza'' i słabo radzi sobie z nowymi przypadkami.
+
+\emph{Las losowy}~\cite{breiman2001random} rozwiązuje ten problem prostą, ale
+skuteczną sztuczką: zamiast jednego drzewa buduje ich setki, a każde uczy na
+nieco innym, losowym wycinku danych i cech. Decyzja końcowa zapada przez
+\emph{głosowanie} --- jeśli większość drzew uznaje połączenie za atak, takim
+jest klasyfikowane. Dzięki temu, że drzewa popełniają różne błędy, ich
+uśrednienie daje wynik znacznie stabilniejszy niż każde drzewo z osobna.
+
+Las losowy ma kilka cech, które czynią go popularnym w cyberbezpieczeństwie:
+nie wymaga skalowania danych, dobrze radzi sobie ze złożonymi zależnościami
+między cechami, szybko się uczy i --- co istotne dla analityka --- potrafi
+wskazać, \textbf{które cechy} były najważniejsze przy podejmowaniu decyzji.
+
+\subsection{Sieci głębokie}
+
+\emph{Sieć neuronowa} to model luźno inspirowany działaniem mózgu. Składa się z
+warstw ,,neuronów'', z których każdy łączy informacje z poprzedniej warstwy i
+przekazuje wynik dalej. Określenie \emph{głęboka} oznacza po prostu, że warstw
+jest wiele --- dzięki temu sieć stopniowo buduje coraz bardziej złożone wzorce:
+od prostych zależności po abstrakcyjne ,,sygnatury'' złośliwej aktywności.
+Sieć uczy się, wielokrotnie oglądając przykłady i samodzielnie korygując swoje
+,,wewnętrzne pokrętła'' tak, aby coraz rzadziej się mylić.
+
+W pracy porównujemy trzy architektury sieci:
+
+\paragraph{MLP (perceptron wielowarstwowy).} Najprostsza i najbardziej klasyczna
+sieć w pełni połączona. Traktuje dane jak zwykłą tabelę liczb i jest naturalnym
+wyborem dla danych opisujących połączenia sieciowe.
+
+\paragraph{CNN 1D (sieć konwolucyjna).} Sieć, która ,,przesuwa okienko'' po
+danych i wyszukuje powtarzające się, lokalne wzorce~\cite{lecun1998gradient}.
+Sprawdza się świetnie w analizie obrazów czy sygnałów; tutaj sprawdzamy, czy
+podobne podejście pomaga w danych o ruchu sieciowym.
+
+\paragraph{LSTM (sieć rekurencyjna).} Sieć z ,,pamięcią'', zaprojektowana do
+danych o charakterze sekwencji~\cite{hochreiter1997long}. Potrafi uwzględniać
+kolejność i zależności między kolejnymi elementami, dlatego włączamy ją do
+porównania, by sprawdzić, czy modelowanie ,,sekwencyjności'' cech przynosi
+jakąkolwiek korzyść.
+
+\subsection{Miary oceny skuteczności}
+
+Sama ,,dokładność'' (odsetek poprawnych decyzji) bywa myląca, gdy ataki są
+rzadkie --- model, który wszystko uzna za ruch normalny, może mieć wysoką
+dokładność, a jednocześnie nie wykryć żadnego włamania. Dlatego patrzymy na
+kilka uzupełniających się miar, opisanych tu zwykłym językiem:
+
+\begin{itemize}
+  \item \textbf{Precyzja} --- spośród połączeń oznaczonych jako atak, jaki
+        odsetek faktycznie był atakiem. Niska precyzja oznacza wiele
+        \emph{fałszywych alarmów}, które męczą zespół bezpieczeństwa.
+  \item \textbf{Czułość} (ang.\ \emph{recall}) --- spośród wszystkich
+        prawdziwych ataków, ile udało się wykryć. Niska czułość oznacza
+        \emph{przeoczone włamania} --- najgroźniejszy rodzaj błędu.
+  \item \textbf{F1} --- jedna liczba godząca precyzję i czułość; wygodna do
+        porównań.
+  \item \textbf{ROC-AUC} i \textbf{PR-AUC} --- miary opisujące jakość modelu
+        niezależnie od ustawionego ,,progu czułości''; im bliżej $1{,}0$, tym
+        lepiej.
+\end{itemize}
+
+W kontekście ochrony danych w chmurze szczególnie zależy nam na \emph{wysokiej
+czułości} (żeby nie przeoczyć naruszenia) przy rozsądnej precyzji (żeby nie
+zasypać analityków fałszywymi alarmami).
+
+\subsection{Przegląd literatury}
+
+Wykrywanie włamań metodami uczenia maszynowego to dobrze zbadany temat.
+Najczęściej wykorzystuje się publiczne zbiory danych, takie jak
+NSL-KDD~\cite{tavallaee2009detailed}, UNSW-NB15~\cite{moustafa2015unsw} czy
+CIC-IDS2017/CSE-CIC-IDS2018 przygotowane przez Canadian Institute for
+Cybersecurity~\cite{sharafaldin2018toward}. Co ciekawe, w wielu badaniach metody
+oparte na drzewach (jak las losowy) okazują się równie dobre lub lepsze od sieci
+głębokich, gdy dane mają postać \emph{tabeli} --- a tak właśnie wyglądają cechy
+połączeń sieciowych~\cite{grinsztajn2022why}. Sieci głębokie błyszczą przede
+wszystkim tam, gdzie dane są surowe i mają wyraźną strukturę (obrazy, dźwięk,
+tekst). Niniejsza praca sprawdza, czy ta obserwacja potwierdza się również w
+naszym, ,,chmurowym'' zadaniu.

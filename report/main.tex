@@ -1,0 +1,75 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Encoding & language ---------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{lmodern}
+
+% --- Layout ----------------------------------------------------------------
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.18}
+\usepackage{microtype}
+\usepackage{parskip}
+
+% --- Math, tables, figures -------------------------------------------------
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{float}
+
+% --- References & links ----------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+
+% --- Generated macros (numbers produced by the experiment) -----------------
+% If the pipeline has been run, load the real numbers; otherwise fall back to
+% neutral placeholders so the document still compiles.
+\IfFileExists{generated/macros.tex}{%
+  \input{generated/macros.tex}%
+}{%
+  \newcommand{\resDataSource}{synthetic}
+  \newcommand{\resNTotal}{--}
+  \newcommand{\resNTrain}{--}
+  \newcommand{\resNVal}{--}
+  \newcommand{\resNTest}{--}
+  \newcommand{\resNFeatures}{--}
+  \newcommand{\resNClasses}{--}
+  \newcommand{\resBestFOneModel}{--}
+  \newcommand{\resBestFOne}{--}
+  \newcommand{\resRFFOne}{--}
+  \newcommand{\resRFAUC}{--}
+  \newcommand{\resBestDeepModel}{--}
+  \newcommand{\resBestDeepFOne}{--}
+  \newcommand{\resRFTrainTime}{--}
+  \newcommand{\resBestDeepTrainTime}{--}
+}
+
+\begin{document}
+
+\input{sections/00_tytul}
+
+\newpage
+\input{sections/00_streszczenie}
+
+\newpage
+\tableofcontents
+
+\newpage
+\input{sections/01_wstep}
+\input{sections/02_problem}
+\input{sections/03_podstawy}
+\input{sections/04_metodyka}
+\input{sections/05_realizacja}
+\input{sections/06_wnioski}
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{bibliografia}
+
+\end{document}
