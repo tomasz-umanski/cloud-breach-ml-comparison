@@ -17,7 +17,6 @@ PROCESSED_DIR = DATA_DIR / "processed"
 RESULTS_DIR = PROJECT_ROOT / "results"
 METRICS_DIR = RESULTS_DIR / "metrics"
 FIGURES_DIR = RESULTS_DIR / "figures"
-REPORT_FIGURES_DIR = PROJECT_ROOT / "report" / "figures"
 
 # --- Reproducibility --------------------------------------------------------
 SEED = 42
@@ -94,6 +93,5 @@ def ensure_dirs() -> None:
         RESULTS_DIR,
         METRICS_DIR,
         FIGURES_DIR,
-        REPORT_FIGURES_DIR,
     ):
         path.mkdir(parents=True, exist_ok=True)

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import argparse
 
-from . import config, plots, tables
+from . import config, plots
 from .data.loader import load_raw
 from .data.preprocess import build_dataset
 from .train import train_and_evaluate
@@ -72,8 +72,7 @@ def main() -> None:
     save_json(results, config.METRICS_DIR / "results_full.json")
 
     plots.generate_all(results, data)
-    tables.export_all(results, data)
-    print("\n[run] Done. See results/ and report/generated/.")
+    print("\n[run] Done. See results/.")
 
 
 if __name__ == "__main__":

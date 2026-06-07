@@ -5,8 +5,6 @@ Empiryczne porównanie klasycznych **lasów losowych** oraz sieci głębokich (*
 Repozytorium zawiera:
 
 * **`src/`** — pipeline w Pythonie (dane → preprocessing → trening → ewaluacja → wykresy),
-* **`Sprawozdanie.docx`** — główne sprawozdanie (Word, styl wzorca BIHSO), generowane skryptem,
-* **`report/`** — alternatywne sprawozdanie w LaTeX (PDF),
 * **`results/`** — metryki i wykresy (generowane; katalog gitignored).
 
 ## Porównywane modele
@@ -29,14 +27,7 @@ Zbiorem docelowym jest **CSE-CIC-IDS2018** — ruch sieciowy zebrany na infrastr
 
 Pełny zbiór ma kilka GB. Program wczytuje go **strumieniowo** (chunkami), losowo próbkuje porcję z każdego pliku dziennego i zapisuje wycinek w cache (`data/processed/cicids_subset_120000.csv`), żeby kolejne uruchomienia nie czytały gigabajtów od nowa.
 
-Pliki CSV umieść w:
-
-```
-data/raw/
-  02-14-2018.csv
-  02-15-2018.csv
-  ...
-```
+Zbiór CSE-CIC-IDS2018 udostępniany jest przez [Canadian Institute for Cybersecurity](https://www.unb.ca/cic/datasets/ids-2018.html) — wymaga akceptacji warunków i ręcznego pobrania.
 
 ## Instalacja
 
@@ -46,7 +37,7 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Modele głębokie zaimplementowano w **PyTorch** (brak wheela TensorFlow dla Pythona 3.14). Do generowania sprawozdania Word potrzebny jest pakiet **python-docx**.
+Modele głębokie zaimplementowano w **PyTorch** (brak wheela TensorFlow dla Pythona 3.14).
 
 ## Uruchomienie
 
@@ -67,28 +58,6 @@ Po zakończeniu:
 
 * `results/metrics/` — metryki w JSON,
 * `results/figures/` — wykresy PNG,
-* `report/figures/` — kopie wykresów do sprawozdania,
-* `report/generated/` — tabele i makra LaTeX (opcjonalnie).
-
-### 2. Sprawozdanie Word (.docx)
-
-W katalogu głównym musi leżeć szablon **`Wzór.docx`** (strona tytułowa i style). Następnie:
-
-```bash
-python -m src.build_docx
-```
-
-Powstaje plik **`Sprawozdanie.docx`** z treścią, wykresami i tabelami zsynchronizowanymi z wynikami eksperymentu.
-
-### 3. Sprawozdanie LaTeX (opcjonalnie)
-
-```bash
-cd report
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
-```
 
 ## Przykładowe wyniki (CSE-CIC-IDS2018, wycinek ~115 tys. połączeń)
 
@@ -106,24 +75,18 @@ Las losowy i najlepsza sieć osiągają praktycznie identyczną skuteczność; l
 
 ```
 .
-├── BIHSO Projekt.docx     # szablon strony tytułowej i stylów (wymagany do build_docx)
-├── Sprawozdanie.docx      # wygenerowane sprawozdanie (po python -m src.build_docx)
 ├── data/
 │   ├── raw/               # pliki CSV CSE-CIC-IDS2018 (gitignored)
 │   └── processed/         # cache wycinka (gitignored)
-├── report/                # sprawozdanie LaTeX + figures/
 ├── results/               # metryki i wykresy (gitignored, generowane)
 ├── src/
 │   ├── config.py          # parametry eksperymentu
 │   ├── run_all.py         # uruchomienie całego potoku
-│   ├── build_docx.py      # generowanie Sprawozdanie.docx
-│   ├── docx_builder.py    # helpery Word (style BIHSO)
 │   ├── data/              # loader, download, preprocess, synthetic
 │   ├── models/            # classical.py, deep.py
 │   ├── train.py           # pętla treningowo-ewaluacyjna
 │   ├── evaluate.py        # metryki
-│   ├── plots.py           # wykresy
-│   └── tables.py          # eksport tabel LaTeX
+│   └── plots.py           # wykresy
 └── requirements.txt
 ```
 
@@ -136,7 +99,3 @@ Główne parametry w [`src/config.py`](src/config.py):
 * `RandomForestConfig`, `DeepConfig` — hiperparametry modeli
 
 Nadpisanie z linii poleceń: `--source`, `--epochs`, `--n-samples`, `--seed`.
-
-## Licencja i dane zewnętrzne
-
-Zbiór CSE-CIC-IDS2018 udostępniany jest przez [Canadian Institute for Cybersecurity](https://www.unb.ca/cic/datasets/ids-2018.html) — wymaga akceptacji warunków i ręcznego pobrania.

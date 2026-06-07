@@ -1,8 +1,7 @@
-"""Generate all figures used in the report from the experiment results."""
+"""Generate all figures from the experiment results."""
 from __future__ import annotations
 
 import os
-import shutil
 from pathlib import Path
 
 # Use a project-local, writable cache dir to avoid font cache warnings.
@@ -38,8 +37,6 @@ def _save(fig, name: str) -> Path:
     config.ensure_dirs()
     out = config.FIGURES_DIR / name
     fig.savefig(out)
-    # Mirror into the report so LaTeX can include it directly.
-    shutil.copy(out, config.REPORT_FIGURES_DIR / name)
     plt.close(fig)
     return out
 
@@ -197,4 +194,4 @@ def generate_all(results: dict, data: Dataset) -> None:
     plot_time_vs_performance(results)
     plot_learning_curves(results)
     plot_feature_importance(results)
-    print(f"[plots] Figures written to {config.FIGURES_DIR} and {config.REPORT_FIGURES_DIR}")
+    print(f"[plots] Figures written to {config.FIGURES_DIR}")

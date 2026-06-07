@@ -13,7 +13,7 @@ from .. import config
 
 @dataclass
 class Dataset:
-    """Container holding everything the models and reports need."""
+    """Container holding everything the models and plots need."""
 
     X_train: np.ndarray
     X_val: np.ndarray

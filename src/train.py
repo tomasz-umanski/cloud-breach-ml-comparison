@@ -50,7 +50,7 @@ def train_and_evaluate(data: Dataset, cfg: config.ExperimentConfig) -> dict:
             f"train={train_time:.2f}s  infer={infer_time:.3f}s"
         )
 
-        # Keep feature importances from the random forest for the report.
+        # Keep feature importances from the random forest for the feature-importance plot.
         if isinstance(model, RandomForestModel):
             results[model.name]["feature_importances"] = {
                 name: float(imp)

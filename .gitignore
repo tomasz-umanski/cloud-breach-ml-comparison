@@ -16,18 +16,6 @@ results/
 # Local caches
 .cache/
 
-# LaTeX build artifacts
-report/*.aux
-report/*.log
-report/*.out
-report/*.toc
-report/*.bbl
-report/*.blg
-report/*.synctex.gz
-report/*.fls
-report/*.fdb_latexmk
-report/sections/*.aux
-
 # OS
 .DS_Store
 
